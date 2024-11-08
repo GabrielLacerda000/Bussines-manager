@@ -14,9 +14,12 @@
 * Authentication
 * Tests
 * validation forms
+* Audit
+* Export to csv and xls
 
  ## Requirements
  * php 8.2.3 or above
+ * laravel 11 or above
  
 
 ## ENV
@@ -38,10 +41,10 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [L
 
 ```bash
 # Clone repository
-$ git clone repo 
+$ git clone https://github.com/GabrielLacerda000/Bussines-manager.git
 
 # Go into the repository
-$ cd blog
+$ cd bussines-manager
 
 # Generate key
 $ php artisan key:generate
@@ -63,7 +66,9 @@ $ php artisan serve
 ```
 
 ## How to use
-Login with credentials made in database and start CRUD operations
+Login with credentials made after seeding and start CRUD operations
+
+##Test
  
   ```bash
 $ php artisan test
@@ -72,9 +77,8 @@ obs: tests are not complete yet and may have bugs and troubles
 
 ## Futures updates
 
-* tests fixes
-* Refactor some functions
-* Add actions classes
+* add tests
+* add user panel
 
 ## License
 
