@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\ColaboradorExporter;
 use App\Filament\Resources\ColaboradorResource\Pages;
 use App\Filament\Resources\ColaboradorResource\RelationManagers;
 use App\Models\Colaborador;
@@ -13,10 +14,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
 
 class ColaboradorResource extends Resource
 {
@@ -40,10 +44,10 @@ class ColaboradorResource extends Resource
                     ->rules([new ValidCpf])
                     ->mask('999.999.999-99'),
                 Select::make('unidade_id')
-                ->label('Unidade')
-                ->options(Unidade::all()->pluck('nome', 'id'))
-                ->required()
-                ->searchable(),
+                    ->label('Unidade')
+                    ->options(Unidade::all()->pluck('nome_fantasia', 'id'))
+                    ->required()
+                    ->searchable(),
             ]);
     }
 
@@ -54,12 +58,29 @@ class ColaboradorResource extends Resource
                 TextColumn::make('nome')->label('Nome')->searchable(),
                 TextColumn::make('email')->label('Email')->searchable(),
                 TextColumn::make('cpf')->label('CPF')->searchable(),
-                TextColumn::make('unidade.nome')->label('Unidade')->searchable(),
+                TextColumn::make('unidade.nome_fantasia')
+                    ->label('Unidade')
+                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
-                //
+                SelectFilter::make('unidade')
+                    ->relationship('unidade', 'nome')
+                    ->searchable()
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(ColaboradorExporter::class)
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -72,7 +93,7 @@ class ColaboradorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AuditsRelationManager::class
         ];
     }
 
@@ -81,7 +102,6 @@ class ColaboradorResource extends Resource
         return [
             'index' => Pages\ListColaboradors::route('/'),
             'create' => Pages\CreateColaborador::route('/create'),
-            'view' => Pages\ViewColaborador::route('/{record}'),
             'edit' => Pages\EditColaborador::route('/{record}/edit'),
         ];
     }

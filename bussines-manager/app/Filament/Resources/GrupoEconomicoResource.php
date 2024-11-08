@@ -6,14 +6,19 @@ use App\Filament\Resources\GrupoEconomicoResource\Pages;
 use App\Filament\Resources\GrupoEconomicoResource\RelationManagers;
 use App\Models\GrupoEconomico;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Exports\GrupoEconomicoExporter;
+use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
 
 class GrupoEconomicoResource extends Resource
 {
@@ -33,12 +38,29 @@ class GrupoEconomicoResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nome')->label('Nome')->sortable()->searchable()
+                TextColumn::make('nome')->label('Nome')->sortable()->searchable(),
+                TextColumn::make('bandeiras_count')
+                    ->label('Bandeiras')
+                    ->counts('bandeiras')
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
-                //
+
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(GrupoEconomicoExporter::class)
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -51,7 +73,7 @@ class GrupoEconomicoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AuditsRelationManager::class,
         ];
     }
 
@@ -60,7 +82,6 @@ class GrupoEconomicoResource extends Resource
         return [
             'index' => Pages\ListGrupoEconomicos::route('/'),
             'create' => Pages\CreateGrupoEconomico::route('/create'),
-            'view' => Pages\ViewGrupoEconomico::route('/{record}'),
             'edit' => Pages\EditGrupoEconomico::route('/{record}/edit'),
         ];
     }
