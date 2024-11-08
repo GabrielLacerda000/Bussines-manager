@@ -2,7 +2,7 @@
 <h1 align="center">
   <br>
   <br>
-  Blog
+  Dashboard manager
   <br>
 </h1>
 
@@ -37,7 +37,7 @@ DB_PASSWORD=example
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Laravel](https://laravel.com) and [composer](https://getcomposer.org) installed on your computer. From your command line:
 
 ```bash
-# Clone this repository
+# Clone repository
 $ git clone repo 
 
 # Go into the repository
@@ -63,21 +63,7 @@ $ php artisan serve
 ```
 
 ## How to use
-You can use any app to test api like [Insominia](https://insomnia.rest/download) or [Postman](https://www.postman.com)  set de bearer token generated with login and set up data.
-Define the base uri and use the endpoints below.
-
-Routes:
-* GET - /api/posts - retreive all posts
-* GET - /api/posts/id - retrieve one post
-* POST - /api/posts - create post
-* PATCH - /api/posts/id - edit post
-* DELETE - /api/posts/id - delete post
-
-* POST - /auth/login - login user with email and password
-* POST - /auth/register - register a user with email, password and name
-* POST - /auth/logout - logout user
-
- ## How to use tests
+Login with credentials made in database and start CRUD operations
  
   ```bash
 $ php artisan test
